@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">QR Scanner</string>
+
+    --asd--
+    <string name="flash_error">Flash error!</string>
+    <string name="tittle_error">Tittle rror!</string>
+    <string name="exit_message">Exit</string>
+
+
 </resources>
