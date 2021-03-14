@@ -3,6 +3,7 @@ package tobolich.qr.scanner
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,10 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
 
     companion object {
-        private const val REQUEST_CODE_PERMISSIONS = 101
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private val CAMERA_RQ = 101
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,17 +42,7 @@ class MainActivity : AppCompatActivity() {
         codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
         codeScanner.isFlashEnabled = false // Whether to enable flash or not
 
-        when {
-            ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> codeScanner.startPreview()
-            else -> ActivityCompat.requestPermissions(
-                    this,
-                    REQUIRED_PERMISSIONS,
-                    REQUEST_CODE_PERMISSIONS
-            )
-        }
+       checkForPermission(Manifest.permission.CAMERA, CAMERA_RQ)
 
         // Callbacks
         codeScanner.decodeCallback = DecodeCallback {
@@ -61,19 +50,36 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Scan result: ${it.text}", Toast.LENGTH_LONG).show()
             }
         }
-        codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
-            runOnUiThread {
-                Toast.makeText(this, "Camera initialization error: ${it.message}",
-                    Toast.LENGTH_LONG).show()
-            }
-        }
+
+        codeScanner.errorCallback = ErrorCallback.SUPPRESS
 
         scannerView.setOnClickListener {
             codeScanner.startPreview()
         }
-
     }
 
+    private fun checkForPermission(permission: String, requestCode: Int) {
+            when {
+                ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED -> {
+                    Toast.makeText(this, "Permission Granted",
+                      Toast.LENGTH_LONG).show()
+                }
+                else -> ActivityCompat.requestPermissions(this, arrayOf(permission),requestCode)
+            }
+        }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        fun innerCheck() {
+            if(grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(applicationContext, "Permission Refused", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(applicationContext, "Permission Granted", Toast.LENGTH_SHORT).show()
+            }
+        }
+        when (requestCode) {
+            CAMERA_RQ -> innerCheck()
+        }
+    }
 
     override fun onResume() {
         super.onResume()
