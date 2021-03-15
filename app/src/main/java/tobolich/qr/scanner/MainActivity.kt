@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
+import tobolich.qr.scanner.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,10 +18,12 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         init(isInitial = true)
     }
 
@@ -38,23 +41,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        codeScanner.releaseResources()
+        if (::codeScanner.isInitialized) codeScanner.releaseResources()
         super.onPause()
     }
 
     private fun init(isInitial: Boolean) = when {
         hasPermissionCamera() -> initScanner()
         isInitial -> requestPermissionCamera()
-        else -> showDialogFragment()
-    }
-
-    /**dialog window */
-    private fun showDialogFragment() {
-        DialogFragment().show(supportFragmentManager, DialogFragment.TAG)
+        else -> showErrorDialog()
     }
 
     private fun initScanner() {
-        codeScannerView = findViewById(R.id.scanner_view)
+        codeScannerView = binding.scannerView
         codeScanner = CodeScanner(this, codeScannerView)
 
         with(codeScanner) {
@@ -70,8 +68,8 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(
                             this@MainActivity,
                             "Scan result: ${it.text}",
-                            Toast.LENGTH_LONG)
-                            .show()
+                            Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
@@ -80,8 +78,8 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(
                             this@MainActivity,
                             "Camera error ${it.message}",
-                            Toast.LENGTH_SHORT)
-                            .show()
+                            Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -100,4 +98,11 @@ class MainActivity : AppCompatActivity() {
     private fun requestPermissionCamera() {
         ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSON_CAMERA)
     }
+
+    private fun showErrorDialog() {
+        DialogAboutCameraPermission().show(supportFragmentManager,
+                DialogAboutCameraPermission.CAMERA_DIALOG_TAG)
+    }
 }
+
+

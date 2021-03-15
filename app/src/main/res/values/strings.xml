@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">QR Scanner</string>
 
-    <string name="dialog_message">Random text about camera</string>
-    <string name="ok">OK</string>
+    <string name="dialog_message">Необходимо разрешение на использование камеры</string>
 
 
 </resources>

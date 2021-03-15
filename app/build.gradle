@@ -6,6 +6,9 @@ plugins {
 android {
     compileSdkVersion 30
 
+    buildFeatures {
+        viewBinding true
+    }
 
     defaultConfig {
         applicationId "tobolich.qr.scanner"
@@ -13,11 +16,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
-
     }
-
-    //
 
     buildTypes {
         release {
@@ -25,10 +24,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
