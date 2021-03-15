@@ -1,87 +1,94 @@
 package tobolich.qr.scanner
 
-import android.Manifest
-import android.content.Intent
-import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest.permission.CAMERA
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.budiyev.android.codescanner.AutoFocusMode
-import com.budiyev.android.codescanner.CodeScanner
-import com.budiyev.android.codescanner.CodeScannerView
-import com.budiyev.android.codescanner.DecodeCallback
-import com.budiyev.android.codescanner.ErrorCallback
-import com.budiyev.android.codescanner.ScanMode
+import com.budiyev.android.codescanner.*
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var codeScanner: CodeScanner
 
     companion object {
-        private const val REQUEST_CODE_PERMISSIONS = 101
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private val RC_PERMISSON_CAMERA = 101
     }
 
+    private lateinit var codeScanner: CodeScanner
+    private lateinit var codeScannerView: CodeScannerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val scannerView = findViewById<CodeScannerView>(R.id.scanner_view)
-
-        codeScanner = CodeScanner(this, scannerView)
-
-        //  codeScanner.startPreview() заупустить камеру
-
-        // Parameters (default values)
-        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
-        codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-        // ex. listOf(BarcodeFormat.QR_CODE)
-        codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
-        codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
-        codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
-        codeScanner.isFlashEnabled = false // Whether to enable flash or not
-
-        when {
-            ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> codeScanner.startPreview()
-            else -> ActivityCompat.requestPermissions(
-                    this,
-                    REQUIRED_PERMISSIONS,
-                    REQUEST_CODE_PERMISSIONS
-            )
-        }
-
-        // Callbacks
-        codeScanner.decodeCallback = DecodeCallback {
-            runOnUiThread {
-                Toast.makeText(this, "Scan result: ${it.text}", Toast.LENGTH_LONG).show()
-            }
-        }
-        codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
-            runOnUiThread {
-                Toast.makeText(this, "Camera initialization error: ${it.message}",
-                    Toast.LENGTH_LONG).show()
-            }
-        }
-
-        scannerView.setOnClickListener {
-            codeScanner.startPreview()
-        }
-
+        init(isInitial = true)
     }
 
+    override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
+    ) {
+        if (requestCode == RC_PERMISSON_CAMERA) init(isInitial = false)
+    }
 
     override fun onResume() {
         super.onResume()
-        codeScanner.startPreview()
+        if (hasPermissionCamera()) codeScanner.startPreview()
     }
 
     override fun onPause() {
         codeScanner.releaseResources()
         super.onPause()
+    }
+
+    private fun init(isInitial: Boolean) = when {
+        hasPermissionCamera() -> initScanner()
+        isInitial -> requestPermissionCamera()
+        else -> Unit //TODO(add dialog window)
+    }
+
+    private fun initScanner() {
+        codeScannerView = findViewById(R.id.scanner_view)
+        codeScanner = CodeScanner(this, codeScannerView)
+
+        with(codeScanner) {
+            camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
+            formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
+            autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
+            scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
+            isAutoFocusEnabled = true // Whether to enable auto focus or not
+            isFlashEnabled = false // Whether to enable flash or not
+
+            decodeCallback = DecodeCallback {
+                runOnUiThread {
+                    Toast.makeText(
+                            this@MainActivity,
+                            "Scan result: ${it.text}",
+                            Toast.LENGTH_LONG)
+                            .show()
+                }
+            }
+
+            errorCallback = ErrorCallback {
+                runOnUiThread {
+                    Toast.makeText(this@MainActivity, "Camera error ${it.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        with(codeScannerView) {
+            setOnClickListener {
+                codeScanner.startPreview()
+            }
+        }
+    }
+
+    private fun hasPermissionCamera(): Boolean {
+        return ContextCompat.checkSelfPermission(this, CAMERA) == PERMISSION_GRANTED
+    }
+
+    private fun requestPermissionCamera() {
+        ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSON_CAMERA)
     }
 }
