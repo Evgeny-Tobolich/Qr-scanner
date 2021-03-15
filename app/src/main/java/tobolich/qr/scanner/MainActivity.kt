@@ -12,7 +12,7 @@ import com.budiyev.android.codescanner.*
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val RC_PERMISSON_CAMERA = 101
+        private const val RC_PERMISSON_CAMERA = 101
     }
 
     private lateinit var codeScanner: CodeScanner
@@ -45,7 +45,12 @@ class MainActivity : AppCompatActivity() {
     private fun init(isInitial: Boolean) = when {
         hasPermissionCamera() -> initScanner()
         isInitial -> requestPermissionCamera()
-        else -> Unit //TODO(add dialog window)
+        else -> showDialogFragment()
+    }
+
+    /**dialog window */
+    private fun showDialogFragment() {
+        DialogFragment().show(supportFragmentManager, DialogFragment.TAG)
     }
 
     private fun initScanner() {
@@ -72,7 +77,11 @@ class MainActivity : AppCompatActivity() {
 
             errorCallback = ErrorCallback {
                 runOnUiThread {
-                    Toast.makeText(this@MainActivity, "Camera error ${it.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                            this@MainActivity,
+                            "Camera error ${it.message}",
+                            Toast.LENGTH_SHORT)
+                            .show()
                 }
             }
         }
