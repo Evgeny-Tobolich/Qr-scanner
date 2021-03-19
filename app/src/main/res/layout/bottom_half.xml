@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
-            android:background="@color/teal_200"
+            android:background="#EAE5E5"
             android:orientation="vertical"
             android:weightSum="3">
 
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/white"
+                android:background="#EAE5E5"
                 android:orientation="vertical">
 
                 <TextView
@@ -69,7 +69,8 @@
                     android:text="@string/done_result_text"
                     android:textAlignment="center"
                     android:textColor="#19DA21"
-                    android:textSize="24dp" />
+                    android:textSize="24dp"
+                    android:visibility="visible"/>
             </LinearLayout>
 
             <TextView
@@ -91,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1.1"
-            android:background="@color/purple_700"
+            android:background="@color/white"
             android:orientation="vertical" >
 
             <Button
@@ -112,7 +113,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1.1"
-            android:background="@color/purple_200"
+            android:background="@color/white"
             android:weightSum="2">
 
             <Button
