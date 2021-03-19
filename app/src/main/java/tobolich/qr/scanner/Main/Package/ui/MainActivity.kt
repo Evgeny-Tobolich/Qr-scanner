@@ -1,6 +1,8 @@
-package tobolich.qr.scanner
+package tobolich.qr.scanner.Main.Package.ui
 
 import android.Manifest.permission.CAMERA
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.widget.Toast
@@ -8,26 +10,35 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
+import tobolich.qr.scanner.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val RC_PERMISSON_CAMERA = 101
+        private const val RC_PERMISSON_CAMERA = 101
     }
 
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
+    private lateinit var binding: ActivityMainBinding
+//     private lateinit var binding: BottomHalfBinding
+
+    private lateinit var scanResult: DecodeCallback
+    private lateinit var clipData: ClipData
+    private lateinit var clipBoardManager: ClipboardManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+//        binding = BottomHalfBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         init(isInitial = true)
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<out String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
     ) {
         if (requestCode == RC_PERMISSON_CAMERA) init(isInitial = false)
     }
@@ -38,41 +49,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        codeScanner.releaseResources()
+        if (::codeScanner.isInitialized) codeScanner.releaseResources()
         super.onPause()
     }
 
     private fun init(isInitial: Boolean) = when {
         hasPermissionCamera() -> initScanner()
         isInitial -> requestPermissionCamera()
-        else -> Unit //TODO(add dialog window)
+        else -> showErrorDialog()
     }
 
     private fun initScanner() {
-        codeScannerView = findViewById(R.id.scanner_view)
+        codeScannerView = binding.scannerView
         codeScanner = CodeScanner(this, codeScannerView)
 
         with(codeScanner) {
-            camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
+            camera = CodeScanner.CAMERA_BACK //CAMERA_BACK or CAMERA_FRONT or specific camera id
             formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-            autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
-            scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
+            autoFocusMode = AutoFocusMode.SAFE // SAfE or CONTINUOUS
+            scanMode = ScanMode.SINGLE // SINGLE or CONTINUOUS or PREVIEW
             isAutoFocusEnabled = true // Whether to enable auto focus or not
-            isFlashEnabled = false // Whether to enable flash or not
+            isFlashEnabled = true // Whether to enable flash or not
 
             decodeCallback = DecodeCallback {
                 runOnUiThread {
                     Toast.makeText(
-                            this@MainActivity,
-                            "Scan result: ${it.text}",
-                            Toast.LENGTH_LONG)
-                            .show()
+                        this@MainActivity,
+                        "Scan result: ${it.text}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
             errorCallback = ErrorCallback {
                 runOnUiThread {
-                    Toast.makeText(this@MainActivity, "Camera error ${it.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Camera error: ${it.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -91,4 +106,14 @@ class MainActivity : AppCompatActivity() {
     private fun requestPermissionCamera() {
         ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSON_CAMERA)
     }
+
+    private fun showErrorDialog() {
+        DialogAboutCameraPermission.newInstance().show(
+            supportFragmentManager,
+            DialogAboutCameraPermission.TAG
+        )
+    }
 }
+
+
+
