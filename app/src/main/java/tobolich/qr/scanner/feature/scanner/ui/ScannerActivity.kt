@@ -9,21 +9,21 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
-import tobolich.qr.scanner.databinding.BottomHalfBinding
+import tobolich.qr.scanner.databinding.ScannerActivityBinding
 
 class ScannerActivity : AppCompatActivity() {
 
     companion object {
-        private const val RC_PERMISSON_CAMERA = 101
+        private const val RC_PERMISSION_CAMERA = 101
     }
 
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
-    private lateinit var binding: BottomHalfBinding
+    private lateinit var binding: ScannerActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = BottomHalfBinding.inflate(layoutInflater)
+        binding = ScannerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init(isInitial = true)
     }
@@ -33,7 +33,7 @@ class ScannerActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == RC_PERMISSON_CAMERA) init(isInitial = false)
+        if (requestCode == RC_PERMISSION_CAMERA) init(isInitial = false)
     }
 
     override fun onResume() {
@@ -97,7 +97,7 @@ class ScannerActivity : AppCompatActivity() {
     }
 
     private fun requestPermissionCamera() {
-        ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSON_CAMERA)
+        ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSION_CAMERA)
     }
 
     private fun showErrorDialog() {
