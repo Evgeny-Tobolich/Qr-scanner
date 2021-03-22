@@ -1,0 +1,6 @@
+tobolich/qr/scanner/databinding/ActivityMainBinding.java
+ tobolich.qr.scanner.databinding.ActivityMainBinding
+tobolich/qr/scanner/databinding/BottomHalfBinding.java
+ tobolich.qr.scanner.databinding.BottomHalfBinding
+tobolich/qr/scanner/BuildConfig.java
+ tobolich.qr.scanner.BuildConfig
