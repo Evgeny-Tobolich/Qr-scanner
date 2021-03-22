@@ -15,8 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QRScanner">
         <activity
-            android:screenOrientation="portrait"
-            android:name=".feature.scanner.ui.ScannerActivity">
+            android:name=".feature.scanner.ui.ScannerActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
