@@ -6,7 +6,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import tobolich.qr.scanner.R
 
-
 class RequestCameraPermissionDialog : DialogFragment() {
 
     companion object {

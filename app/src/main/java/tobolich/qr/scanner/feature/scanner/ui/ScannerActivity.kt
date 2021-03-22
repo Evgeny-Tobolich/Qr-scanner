@@ -7,32 +7,24 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.budiyev.android.codescanner.*
-import kotlinx.android.synthetic.main.bottom_half.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
-import tobolich.qr.scanner.common.utils.openResult
 import tobolich.qr.scanner.databinding.BottomHalfBinding
-import tobolich.qr.scanner.feature.scanner.presentation.ScannerViewModel
 
 class ScannerActivity : AppCompatActivity() {
 
     companion object {
-        private const val RC_PERMISSION_CAMERA = 101
+        private const val RC_PERMISSON_CAMERA = 101
     }
 
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
     private lateinit var binding: BottomHalfBinding
-    private lateinit var mViewModel: ScannerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = BottomHalfBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        mViewModel = ViewModelProvider(this@ScannerActivity).get(ScannerViewModel::class.java)
-
         init(isInitial = true)
     }
 
@@ -41,7 +33,7 @@ class ScannerActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == RC_PERMISSION_CAMERA) init(isInitial = false)
+        if (requestCode == RC_PERMISSON_CAMERA) init(isInitial = false)
     }
 
     override fun onResume() {
@@ -80,33 +72,32 @@ class ScannerActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+            }
 
-                errorCallback = ErrorCallback {
-                    runOnUiThread {
-                        Toast.makeText(
-                            this@ScannerActivity,
-                            "Camera error: ${it.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-
-                with(codeScannerView) {
-                    setOnClickListener {
-                        codeScanner.startPreview()
-                    }
+            errorCallback = ErrorCallback {
+                runOnUiThread {
+                    Toast.makeText(
+                        this@ScannerActivity,
+                        "Camera error: ${it.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
-    }
 
+        with(codeScannerView) {
+            setOnClickListener {
+                codeScanner.startPreview()
+            }
+        }
+    }
 
     private fun hasPermissionCamera(): Boolean {
         return ContextCompat.checkSelfPermission(this, CAMERA) == PERMISSION_GRANTED
     }
 
     private fun requestPermissionCamera() {
-        ActivityCompat.requestPermissions(ScannerActivity(), arrayOf(CAMERA), RC_PERMISSION_CAMERA)
+        ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSON_CAMERA)
     }
 
     private fun showErrorDialog() {
