@@ -4,6 +4,7 @@
     <string name="camera_permission_dialog_message">Необходимо разрешение на использование камеры</string>
     <string name="camera_permission_dialog_title">Обратите внимание</string>
     <string name="done_result_text">Готово!</string>
+    <string name="copy_toast_text">Сopied!</string>
 
 
 </resources>
