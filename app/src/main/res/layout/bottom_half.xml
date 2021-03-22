@@ -61,7 +61,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/result_text"
+                    android:id="@+id/done_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -69,12 +69,12 @@
                     android:text="@string/done_result_text"
                     android:textAlignment="center"
                     android:textColor="#19DA21"
-                    android:textSize="24dp"
+                    android:textSize="24sp"
                     android:visibility="visible"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/scan_result_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -82,7 +82,7 @@
                 android:layout_weight="0.5"
                 android:gravity="center"
                 android:text="TextView"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:visibility="gone" />
 
         </LinearLayout>
