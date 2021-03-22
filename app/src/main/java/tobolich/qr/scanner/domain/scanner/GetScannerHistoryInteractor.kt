@@ -1,4 +1,3 @@
 package tobolich.qr.scanner.domain.scanner
 
-class GetScannerHistoryInteractor {
-}
+class GetScannerHistoryInteractor
