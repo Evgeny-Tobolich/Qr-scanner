@@ -102,10 +102,7 @@ class ScannerActivity : AppCompatActivity() {
 
     private fun showErrorDialog() {
         RequestCameraPermissionDialog.newInstance()
-            .show(
-                supportFragmentManager,
-                RequestCameraPermissionDialog.TAG
-            )
+            .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
     }
 }
 
