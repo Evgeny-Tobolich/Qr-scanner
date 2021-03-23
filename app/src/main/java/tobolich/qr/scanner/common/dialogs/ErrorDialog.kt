@@ -1,4 +1,4 @@
 package tobolich.qr.scanner.common.dialogs
 
-// TODO
+// TODO: реализовать функционал
 class ErrorDialog

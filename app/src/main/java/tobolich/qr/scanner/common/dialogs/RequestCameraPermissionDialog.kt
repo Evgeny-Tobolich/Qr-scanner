@@ -9,7 +9,7 @@ import tobolich.qr.scanner.R
 class RequestCameraPermissionDialog : DialogFragment() {
 
     companion object {
-           val TAG = RequestCameraPermissionDialog::class.java.simpleName
+        val TAG = RequestCameraPermissionDialog::class.java.simpleName
 
         fun newInstance(): RequestCameraPermissionDialog {
             return RequestCameraPermissionDialog()
