@@ -68,7 +68,7 @@
                     android:layout_margin="2dp"
                     android:text="@string/done_result_text"
                     android:textAlignment="center"
-                    android:textColor="@color/done_text_color_green"
+                    android:textColor="@color/done_green"
                     android:textSize="@dimen/text_size_large"
                     android:visibility="visible" />
             </LinearLayout>
