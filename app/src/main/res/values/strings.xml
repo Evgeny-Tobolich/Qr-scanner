@@ -5,9 +5,9 @@
     <string name="camera_permission_dialog_title">Обратите внимание</string>
     <string name="done_result_text">Готово!</string>
     <string name="copy_toast_text">Скопировано</string>
-    <string name="open_in_browser">ОТКРЫТЬ ССЫЛКУ</string>
-    <string name="copy_button">КОПИЯ</string>
-    <string name="share_button">ПОДЕЛИТЬСЯ</string>
+    <string name="open_in_browser">открыть ссылку</string>
+    <string name="copy_button">копия</string>
+    <string name="share_button">поделиться</string>
 
 
 </resources>
