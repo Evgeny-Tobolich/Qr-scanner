@@ -96,7 +96,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/openInBrowser"
+                android:id="@+id/openInBrowserButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
