@@ -8,7 +8,6 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Patterns
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import tobolich.qr.scanner.R
 
 
@@ -31,12 +30,11 @@ fun Activity.share(string: String) {
 }
 
 fun Activity.openInBrowser(string: String) {
-   if(Patterns.WEB_URL.matcher(string).matches()) {
-       val i = Intent(Intent.ACTION_VIEW).apply {
-           data = Uri.parse(string)
-       }
-       startActivity(i)
-   }
-
+    if (Patterns.WEB_URL.matcher(string).matches()) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            data = Uri.parse(string)
+        }
+        startActivity(intent)
+    }
 }
 
