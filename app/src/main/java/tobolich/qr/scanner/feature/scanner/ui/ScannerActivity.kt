@@ -9,7 +9,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
-import tobolich.qr.scanner.common.utils.copy
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
 
 class ScannerActivity : AppCompatActivity() {
@@ -20,7 +19,7 @@ class ScannerActivity : AppCompatActivity() {
 
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
-    lateinit var binding: ScannerActivityBinding
+    private lateinit var binding: ScannerActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
