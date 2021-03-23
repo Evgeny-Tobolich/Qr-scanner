@@ -1,4 +1,4 @@
-package tobolich.qr.scanner.Main.Package.ui
+package tobolich.qr.scanner.common.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
@@ -6,14 +6,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import tobolich.qr.scanner.R
 
-class DialogAboutCameraPermission : DialogFragment() {
+class RequestCameraPermissionDialog : DialogFragment() {
 
     companion object {
-        fun newInstance(): DialogAboutCameraPermission {
-            return DialogAboutCameraPermission()
-        }
+        val TAG = RequestCameraPermissionDialog::class.java.simpleName
 
-        const val TAG = "CameraPermissionDialog"
+        fun newInstance(): RequestCameraPermissionDialog {
+            return RequestCameraPermissionDialog()
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

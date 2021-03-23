@@ -1,8 +1,6 @@
-package tobolich.qr.scanner.Main.Package.ui
+package tobolich.qr.scanner.feature.scanner.ui
 
 import android.Manifest.permission.CAMERA
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.widget.Toast
@@ -10,27 +8,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
-import tobolich.qr.scanner.databinding.ActivityMainBinding
+import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
+import tobolich.qr.scanner.databinding.ScannerActivityBinding
 
-class MainActivity : AppCompatActivity() {
+class ScannerActivity : AppCompatActivity() {
 
     companion object {
-        private const val RC_PERMISSON_CAMERA = 101
+        private const val RC_PERMISSION_CAMERA = 101
     }
 
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
-    private lateinit var binding: ActivityMainBinding
-//     private lateinit var binding: BottomHalfBinding
-
-    private lateinit var scanResult: DecodeCallback
-    private lateinit var clipData: ClipData
-    private lateinit var clipBoardManager: ClipboardManager
+    private lateinit var binding: ScannerActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-//        binding = BottomHalfBinding.inflate(layoutInflater)
+        binding = ScannerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         init(isInitial = true)
     }
@@ -40,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == RC_PERMISSON_CAMERA) init(isInitial = false)
+        if (requestCode == RC_PERMISSION_CAMERA) init(isInitial = false)
     }
 
     override fun onResume() {
@@ -74,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             decodeCallback = DecodeCallback {
                 runOnUiThread {
                     Toast.makeText(
-                        this@MainActivity,
+                        this@ScannerActivity,
                         "Scan result: ${it.text}",
                         Toast.LENGTH_LONG
                     ).show()
@@ -84,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             errorCallback = ErrorCallback {
                 runOnUiThread {
                     Toast.makeText(
-                        this@MainActivity,
+                        this@ScannerActivity,
                         "Camera error: ${it.message}",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -104,16 +97,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestPermissionCamera() {
-        ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSON_CAMERA)
+        ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSION_CAMERA)
     }
 
     private fun showErrorDialog() {
-        DialogAboutCameraPermission.newInstance().show(
-            supportFragmentManager,
-            DialogAboutCameraPermission.TAG
-        )
+        RequestCameraPermissionDialog.newInstance()
+            .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
     }
 }
+
 
 
 
