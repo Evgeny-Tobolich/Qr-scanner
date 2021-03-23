@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
+import tobolich.qr.scanner.common.utils.copy
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
 
 class ScannerActivity : AppCompatActivity() {
@@ -19,7 +20,7 @@ class ScannerActivity : AppCompatActivity() {
 
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
-    private lateinit var binding: ScannerActivityBinding
+    lateinit var binding: ScannerActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,7 +65,7 @@ class ScannerActivity : AppCompatActivity() {
             isAutoFocusEnabled = true // Whether to enable auto focus or not
             isFlashEnabled = true // Whether to enable flash or not
 
-            decodeCallback = DecodeCallback {
+            decodeCallback = DecodeCallback { //TODO: передавать результат на вьюмодел
                 runOnUiThread {
                     Toast.makeText(
                         this@ScannerActivity,
@@ -74,7 +75,7 @@ class ScannerActivity : AppCompatActivity() {
                 }
             }
 
-            errorCallback = ErrorCallback {
+            errorCallback = ErrorCallback { //TODO: передавать результат на вьюмодел
                 runOnUiThread {
                     Toast.makeText(
                         this@ScannerActivity,
@@ -100,6 +101,7 @@ class ScannerActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSION_CAMERA)
     }
 
+    //TODO: переименовать  к RequestCameraPermissionDialog
     private fun showErrorDialog() {
         RequestCameraPermissionDialog.newInstance()
             .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
