@@ -5,9 +5,12 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.util.Patterns
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import tobolich.qr.scanner.R
-import tobolich.qr.scanner.feature.scanner.ui.ScannerActivity
+
 
 fun Activity.copy(string: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -27,8 +30,13 @@ fun Activity.share(string: String) {
     startActivity(shareIntent)
 }
 
-// TODO: реализовать функционал
-fun ScannerActivity.openInBrowser() {
-    Toast.makeText(this, "Поделились", Toast.LENGTH_SHORT).show()
+fun Activity.openInBrowser(string: String) {
+   if(Patterns.WEB_URL.matcher(string).matches()) {
+       val i = Intent(Intent.ACTION_VIEW).apply {
+           data = Uri.parse(string)
+       }
+       startActivity(i)
+   }
+
 }
 
