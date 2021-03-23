@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import tobolich.qr.scanner.R
 import tobolich.qr.scanner.feature.scanner.ui.ScannerActivity
@@ -16,9 +17,14 @@ fun Activity.copy(string: String) {
     Toast.makeText(this, getString(R.string.copy_toast_text), Toast.LENGTH_SHORT).show()
 }
 
-//TODO: реализовать функционал
-fun ScannerActivity.share() {
-    Toast.makeText(this, "Поделились", Toast.LENGTH_SHORT).show()
+fun Activity.share(string: String) {
+    val sendIntent: Intent = Intent(Intent.ACTION_SEND).apply {
+        putExtra(Intent.EXTRA_TEXT, string)
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    startActivity(shareIntent)
 }
 
 // TODO: реализовать функционал
