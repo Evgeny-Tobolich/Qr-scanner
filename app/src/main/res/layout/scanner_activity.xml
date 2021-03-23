@@ -8,14 +8,14 @@
     android:weightSum="2">
 
     <LinearLayout
-        android:id="@+id/scan_field"
+        android:id="@+id/scanFieldLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="0.75"
         android:orientation="vertical">
 
         <com.budiyev.android.codescanner.CodeScannerView
-            android:id="@+id/scanner_view"
+            android:id="@+id/scannerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:autoFocusButtonColor="@android:color/white"
@@ -35,7 +35,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/result_field"
+        android:id="@+id/resultFieldLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1.25"
@@ -44,7 +44,7 @@
         android:weightSum="3">
 
         <LinearLayout
-            android:id="@+id/result_top"
+            android:id="@+id/resultTopLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.8"
@@ -53,7 +53,7 @@
             android:weightSum="3">
 
             <LinearLayout
-                android:id="@+id/result_text_layout"
+                android:id="@+id/resultTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -61,7 +61,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/done_text"
+                    android:id="@+id/doneText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -74,7 +74,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/scan_result_text"
+                android:id="@+id/scanResultText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -88,7 +88,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/result_center"
+            android:id="@+id/resultCenterLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1.1"
@@ -97,7 +97,7 @@
 
             <Button
                 android:onClick="openInBrws"
-                android:id="@+id/btn_go_to"
+                android:id="@+id/openInBrowser"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -109,7 +109,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/result_bottom"
+            android:id="@+id/resultBottomLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1.1"
@@ -118,7 +118,7 @@
 
             <Button
                 android:onClick="copyBtnClick"
-                android:id="@+id/btn_copy"
+                android:id="@+id/copyButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -127,7 +127,7 @@
 
             <Button
                 android:onClick="shareBntClick"
-                android:id="@+id/btn_share"
+                android:id="@+id/shareButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
