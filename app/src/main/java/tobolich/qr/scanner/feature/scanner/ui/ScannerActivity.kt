@@ -64,7 +64,7 @@ class ScannerActivity : AppCompatActivity() {
             isAutoFocusEnabled = true // Whether to enable auto focus or not
             isFlashEnabled = true // Whether to enable flash or not
 
-            decodeCallback = DecodeCallback {
+            decodeCallback = DecodeCallback { //TODO: передавать результат на вьюмодел
                 runOnUiThread {
                     Toast.makeText(
                         this@ScannerActivity,
@@ -74,7 +74,7 @@ class ScannerActivity : AppCompatActivity() {
                 }
             }
 
-            errorCallback = ErrorCallback {
+            errorCallback = ErrorCallback { //TODO: передавать результат на вьюмодел
                 runOnUiThread {
                     Toast.makeText(
                         this@ScannerActivity,
@@ -100,6 +100,7 @@ class ScannerActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSION_CAMERA)
     }
 
+    //TODO: переименовать  к RequestCameraPermissionDialog
     private fun showErrorDialog() {
         RequestCameraPermissionDialog.newInstance()
             .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
