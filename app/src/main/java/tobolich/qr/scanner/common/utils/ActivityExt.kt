@@ -18,13 +18,13 @@ fun Activity.copy(string: String) {
 }
 
 fun Activity.share(string: String) {
-    val sendIntent: Intent = Intent(Intent.ACTION_SEND).apply {
+    val intentShare = Intent(Intent.ACTION_SEND).apply {
         putExtra(Intent.EXTRA_TEXT, string)
         type = "text/plain"
+    }.let {
+        Intent.createChooser(it, null)
     }
-
-    val shareIntent = Intent.createChooser(sendIntent, null)
-    startActivity(shareIntent)
+    startActivity(intentShare)
 }
 
 // TODO: реализовать функционал
