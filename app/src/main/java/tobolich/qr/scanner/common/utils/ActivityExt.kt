@@ -31,18 +31,19 @@ fun Activity.share(string: String) {
 fun Activity.openInBrowser(string: String) =
     if (Patterns.WEB_URL.matcher(string).matches()) {
         openInBrowserAsURL(string)
-    } else openInBrowserAsQueryInGoogle(string)
+    } else {
+        openInBrowserAsQueryInGoogle(string)
+    }
 
 fun Activity.openInBrowserAsURL(string: String) {
-    val url = if (
-        !string.startsWith("http://") &&
-        !string.startsWith("https://") &&
-        !string.startsWith("pop3://") &&
-        !string.startsWith("ftp://") &&
-        !string.startsWith("smtp://")
-    ) {
-        "http://$string"
-    } else string
+    val url = when {
+        !string.startsWith("http://") -> "https://$string"
+        !string.startsWith("https://") -> "https://$string"
+        !string.startsWith("pop3://") -> "https://$string"
+        !string.startsWith("ftp://") -> "https://$string"
+        !string.startsWith("smtp://") -> "https://$string"
+        else -> string
+    }
 
     val intent = Intent(Intent.ACTION_VIEW)
         .apply { data = Uri.parse(url) }
