@@ -34,20 +34,24 @@ fun Activity.openInBrowser(string: String) =
     } else openInBrowserAsQueryInGoogle(string)
 
 fun Activity.openInBrowserAsURL(string: String) {
-    val url = if (!string.startsWith("http://") && !string.startsWith("https://")) {
+    val url = if (
+        !string.startsWith("http://") &&
+        !string.startsWith("https://") &&
+        !string.startsWith("pop3://") &&
+        !string.startsWith("ftp://") &&
+        !string.startsWith("smtp://")
+    ) {
         "http://$string"
     } else string
 
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        data = Uri.parse(url)
-    }
+    val intent = Intent(Intent.ACTION_VIEW)
+        .apply { data = Uri.parse(url) }
     startActivity(intent)
 }
 
 fun Activity.openInBrowserAsQueryInGoogle(string: String) {
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        data = Uri.parse("http://www.google.com/search?q=$string")
-    }
+    val intent = Intent(Intent.ACTION_VIEW)
+        .apply { data = Uri.parse("https://www.google.com/search?q=$string") }
     startActivity(intent)
 }
 
