@@ -49,7 +49,7 @@ class ScannerActivity : AppCompatActivity() {
     private fun init(isInitial: Boolean) = when {
         hasPermissionCamera() -> initScanner()
         isInitial -> requestPermissionCamera()
-        else -> requestCameraPermissionErrorDialog()
+        else -> showErrorDialog()
     }
 
     private fun initScanner() {
@@ -100,7 +100,8 @@ class ScannerActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSION_CAMERA)
     }
 
-    private fun requestCameraPermissionErrorDialog() {
+    //TODO: переименовать  к RequestCameraPermissionDialog
+    private fun showErrorDialog() {
         RequestCameraPermissionDialog.newInstance()
             .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
     }
