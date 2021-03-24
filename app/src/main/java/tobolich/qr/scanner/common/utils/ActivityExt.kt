@@ -37,11 +37,11 @@ fun Activity.openInBrowser(string: String) =
 
 fun Activity.openInBrowserAsURL(string: String) {
     val url = when {
-        !string.startsWith("http://") -> "https://$string"
-        !string.startsWith("https://") -> "https://$string"
-        !string.startsWith("pop3://") -> "https://$string"
-        !string.startsWith("ftp://") -> "https://$string"
-        !string.startsWith("smtp://") -> "https://$string"
+        !string.startsWith("http://") ||
+                !string.startsWith("https://") ||
+                !string.startsWith("pop3://") ||
+                !string.startsWith("ftp://") ||
+                !string.startsWith("smtp://") -> "https://$string"
         else -> string
     }
 
