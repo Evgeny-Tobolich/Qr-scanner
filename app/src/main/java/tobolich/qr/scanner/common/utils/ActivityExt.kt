@@ -10,7 +10,6 @@ import android.util.Patterns
 import android.widget.Toast
 import tobolich.qr.scanner.R
 
-
 fun Activity.copy(string: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clipData = ClipData.newPlainText("Copy", string)
@@ -29,14 +28,15 @@ fun Activity.share(string: String) {
     startActivity(shareIntent)
 }
 
-fun Activity.openInBrowser(string: String) {
-    if (Patterns.WEB_URL.matcher(string).matches()) OpenInBrowserAsURL(string)
-    else OpenInBrowserAsQueryInGoogle(string)
-}
+fun Activity.openInBrowser(string: String) =
+    if (Patterns.WEB_URL.matcher(string).matches()) {
+        openInBrowserAsURL(string)
+    } else openInBrowserAsQueryInGoogle(string)
 
-private fun Activity.OpenInBrowserAsURL(string: String) {
-    val url = if (!string.startsWith("http://") && !string.startsWith("https://"))
-        "http://$string" else string
+fun Activity.openInBrowserAsURL(string: String) {
+    val url = if (!string.startsWith("http://") && !string.startsWith("https://")) {
+        "http://$string"
+    } else string
 
     val intent = Intent(Intent.ACTION_VIEW).apply {
         data = Uri.parse(url)
@@ -44,7 +44,7 @@ private fun Activity.OpenInBrowserAsURL(string: String) {
     startActivity(intent)
 }
 
-private fun Activity.OpenInBrowserAsQueryInGoogle(string: String) {
+fun Activity.openInBrowserAsQueryInGoogle(string: String) {
     val intent = Intent(Intent.ACTION_VIEW).apply {
         data = Uri.parse("http://www.google.com/search?q=$string")
     }
