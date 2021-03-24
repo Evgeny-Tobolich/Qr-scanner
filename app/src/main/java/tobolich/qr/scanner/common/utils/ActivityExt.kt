@@ -30,11 +30,24 @@ fun Activity.share(string: String) {
 }
 
 fun Activity.openInBrowser(string: String) {
-    if (Patterns.WEB_URL.matcher(string).matches()) {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(string)
-        }
-        startActivity(intent)
+    if (Patterns.WEB_URL.matcher(string).matches()) OpenInBrowserAsURL(string)
+    else OpenInBrowserAsQueryInGoogle(string)
+}
+
+private fun Activity.OpenInBrowserAsURL(string: String) {
+    val url = if (!string.startsWith("http://") && !string.startsWith("https://"))
+        "http://$string" else string
+
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        data = Uri.parse(url)
     }
+    startActivity(intent)
+}
+
+private fun Activity.OpenInBrowserAsQueryInGoogle(string: String) {
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        data = Uri.parse("http://www.google.com/search?q=$string")
+    }
+    startActivity(intent)
 }
 
