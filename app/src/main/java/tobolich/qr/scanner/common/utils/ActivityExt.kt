@@ -1,6 +1,5 @@
 package tobolich.qr.scanner.common.utils
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -9,9 +8,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Patterns
 import android.widget.Toast
-import androidx.core.util.PatternsCompat
 import tobolich.qr.scanner.R
-import tobolich.qr.scanner.feature.scanner.ui.ScannerActivity
 
 fun Activity.copy(string: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
