@@ -7,7 +7,6 @@
 
     <!-- error dialog -->
     <string name="error_dialog_title">Ошибка!</string>
-    <string name="got_it">понятно</string>
 
     <!-- buttons strings -->
     <string name="done_result_text">Готово!</string>

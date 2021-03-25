@@ -10,34 +10,31 @@ class ErrorDialog : DialogFragment() {
 
     companion object {
         val TAG = ErrorDialog::class.java.simpleName
+        private const val ARG_MESSAGE = "string"
 
         fun newInstance(string: String): ErrorDialog {
             val errorDialog = ErrorDialog()
             val args = Bundle()
-            args.putString("string", string)
+            args.putString(ARG_MESSAGE, string)
             errorDialog.arguments = args
 
             return errorDialog
         }
 
         fun newInstance(throwable: Throwable): ErrorDialog {
-            val errorDialog = ErrorDialog()
-            val args = Bundle()
-            args.putString("throwable", throwable.message)
-            errorDialog.arguments = args
-
-            return errorDialog
+            return newInstance(throwable.message.toString())
         }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val message = arguments?.getString("string") ?: arguments?.getString("throwable")
-
+        val message: String by lazy {
+            "${arguments?.getString(ARG_MESSAGE)}"
+        }
         return AlertDialog.Builder(requireContext())
             .apply {
                 setTitle(getString(R.string.error_dialog_title))
                 setMessage(message)
-                setPositiveButton(getString(R.string.got_it)) { _, _ -> }
+                setPositiveButton(getString(android.R.string.ok)) { _, _ -> }
             }
             .create()
     }
