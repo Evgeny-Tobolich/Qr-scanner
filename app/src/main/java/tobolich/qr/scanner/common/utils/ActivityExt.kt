@@ -1,13 +1,15 @@
 package tobolich.qr.scanner.common.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.util.Patterns
 import android.widget.Toast
 import tobolich.qr.scanner.R
-import tobolich.qr.scanner.feature.scanner.ui.ScannerActivity
 
 fun Activity.copy(string: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -27,8 +29,30 @@ fun Activity.share(string: String) {
     startActivity(shareIntent)
 }
 
-// TODO: реализовать функционал
-fun ScannerActivity.openInBrowser() {
-    Toast.makeText(this, "Поделились", Toast.LENGTH_SHORT).show()
+fun Activity.openInBrowser(string: String) =
+    if (Patterns.WEB_URL.matcher(string).matches()) {
+        openInBrowserAsURL(string)
+    } else {
+        openInBrowserAsQueryInGoogle(string)
+    }
+
+@SuppressLint("QueryPermissionsNeeded")
+fun Activity.openInBrowserAsURL(string: String) {
+    val url = if (!string.startsWith("http://") && !string.startsWith("https://")) {
+        "https://$string"
+    } else {
+        string
+    }
+
+    val intent = Intent(Intent.ACTION_VIEW)
+        .apply { data = Uri.parse(url) }
+
+    if (intent.resolveActivity(packageManager) == null) startActivity(intent)
+}
+
+fun Activity.openInBrowserAsQueryInGoogle(string: String) {
+    val intent = Intent(Intent.ACTION_VIEW)
+        .apply { data = Uri.parse("https://www.google.com/search?q=$string") }
+    startActivity(intent)
 }
 
