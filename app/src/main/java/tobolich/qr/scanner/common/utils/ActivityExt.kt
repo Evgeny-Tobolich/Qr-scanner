@@ -1,5 +1,6 @@
 package tobolich.qr.scanner.common.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -35,12 +36,18 @@ fun Activity.openInBrowser(string: String) =
         openInBrowserAsQueryInGoogle(string)
     }
 
+@SuppressLint("QueryPermissionsNeeded")
 fun Activity.openInBrowserAsURL(string: String) {
-    val intent = Intent(Intent.ACTION_VIEW)
-        .apply { data = Uri.parse(string) }
+    val url = if (!string.startsWith("http://") && !string.startsWith("https://")) {
+        "https://$string"
+    } else {
+        string
+    }
 
-    if (intent.resolveActivity(packageManager) != null)
-        startActivity(intent)
+    val intent = Intent(Intent.ACTION_VIEW)
+        .apply { data = Uri.parse(url) }
+
+    if (intent.resolveActivity(packageManager) == null) startActivity(intent)
 }
 
 fun Activity.openInBrowserAsQueryInGoogle(string: String) {
