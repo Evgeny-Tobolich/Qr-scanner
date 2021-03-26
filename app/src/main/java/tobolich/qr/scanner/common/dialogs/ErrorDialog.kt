@@ -8,17 +8,15 @@ import tobolich.qr.scanner.R
 
 class ErrorDialog : DialogFragment() {
 
-    private val message: String by lazy { "${arguments?.getString(ARG_MESSAGE)}" }
-
     companion object {
         val TAG = ErrorDialog::class.java.simpleName
         private const val ARG_MESSAGE = "ARG_MESSAGE"
 
         fun newInstance(throwable: Throwable): ErrorDialog {
-            return newInstance(throwable.message.toString())
+            return newInstance(throwable.message)
         }
 
-        fun newInstance(message: String): ErrorDialog {
+        fun newInstance(message: String?): ErrorDialog {
             return ErrorDialog().apply {
                 arguments = Bundle().apply {
                     putString(ARG_MESSAGE, message)
@@ -26,6 +24,8 @@ class ErrorDialog : DialogFragment() {
             }
         }
     }
+
+    private val message: String by lazy { "${arguments?.getString(ARG_MESSAGE)}" }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog.Builder(requireContext())
