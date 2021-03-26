@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">QR Scanner</string>
 
+    <!-- camera permission dialog -->
     <string name="camera_permission_dialog_message">Необходимо разрешение на использование камеры</string>
     <string name="camera_permission_dialog_title">Обратите внимание</string>
+
+    <!-- error dialog -->
+    <string name="error_dialog_title">Ошибка!</string>
+
+    <!-- buttons strings -->
     <string name="done_result_text">Готово!</string>
     <string name="copy_toast_text">Скопировано</string>
     <string name="open_in_browser">открыть ссылку</string>
