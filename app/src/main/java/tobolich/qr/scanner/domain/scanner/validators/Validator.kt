@@ -2,5 +2,5 @@ package tobolich.qr.scanner.domain.scanner.validators
 
 interface Validator {
 
-    fun isValid(): Boolean
+    fun isValid(string: String): Boolean
 }
