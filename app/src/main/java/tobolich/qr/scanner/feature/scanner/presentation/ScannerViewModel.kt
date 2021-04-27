@@ -1,7 +1,17 @@
 package tobolich.qr.scanner.feature.scanner.presentation
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.budiyev.android.codescanner.DecodeCallback
 
-//TODO: добавить обработку результата сканирования
-//TODO: добавить лайфдата для динамического отображения UI
-class ScannerViewModel : ViewModel()
+class ScannerViewModel : ViewModel() {
+
+    val liveData: MutableLiveData<DecodeCallback> by lazy {
+        MutableLiveData<DecodeCallback>()
+    }
+
+    fun scanResult() {
+        TODO()
+    }
+}
+

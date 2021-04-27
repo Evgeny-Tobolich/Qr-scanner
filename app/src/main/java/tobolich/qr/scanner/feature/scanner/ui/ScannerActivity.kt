@@ -7,9 +7,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
+import tobolich.qr.scanner.feature.scanner.presentation.ScannerViewModel
 
 class ScannerActivity : AppCompatActivity() {
 
@@ -20,12 +23,20 @@ class ScannerActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
     private lateinit var binding: ScannerActivityBinding
+    private lateinit var viewModel: ScannerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ScannerActivityBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this).get(ScannerViewModel::class.java)
         setContentView(binding.root)
         init(isInitial = true)
+
+        viewModel.liveData.observe(this, Observer {
+            codeScanner.decodeCallback = it
+        })
+
+        viewModel.scanResult()
     }
 
     override fun onRequestPermissionsResult(
