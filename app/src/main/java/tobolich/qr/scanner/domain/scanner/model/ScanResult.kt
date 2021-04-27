@@ -9,5 +9,3 @@ sealed class ScanResult {
     data class Phone(override val string: String) : ScanResult(), Serializable
     data class Text(override val string: String) : ScanResult(), Serializable
 }
-
-
