@@ -1,17 +1,21 @@
 package tobolich.qr.scanner.feature.scanner.presentation
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.budiyev.android.codescanner.DecodeCallback
+import tobolich.qr.scanner.domain.scanner.ProcessScanResultInteractor
 
-class ScannerViewModel : ViewModel() {
+class ScannerViewModel(
+    private val processScanResultInteractor: ProcessScanResultInteractor
+) : ViewModel() {
 
-    val liveData: MutableLiveData<DecodeCallback> by lazy {
-        MutableLiveData<DecodeCallback>()
-    }
+    private val _liveData = MutableLiveData<String>()
+    val liveData: LiveData<String> = _liveData
 
-    fun scanResult() {
-        TODO()
+    fun processScanResult(string: String) {
+        processScanResultInteractor.execute(string).let {
+            _liveData.value = it.toString()
+        }
     }
 }
 

@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
@@ -32,11 +31,7 @@ class ScannerActivity : AppCompatActivity() {
         setContentView(binding.root)
         init(isInitial = true)
 
-        viewModel.liveData.observe(this, Observer {
-            codeScanner.decodeCallback = it
-        })
-
-        viewModel.scanResult()
+        viewModel.processScanResult(viewModel.liveData.toString())
     }
 
     override fun onRequestPermissionsResult(
