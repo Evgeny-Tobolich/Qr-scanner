@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
@@ -32,7 +32,9 @@ class ScannerActivity : AppCompatActivity() {
         setContentView(binding.root)
         init(isInitial = true)
 
-        viewModel.processScanResult(codeScanner.decodeCallback.toString())
+        viewModel.liveData.observe(this, Observer { scan ->
+            binding.scanResultText.text = scan.string
+        })
     }
 
     override fun onRequestPermissionsResult(
@@ -71,14 +73,8 @@ class ScannerActivity : AppCompatActivity() {
             isAutoFocusEnabled = true // Whether to enable auto focus or not
             isFlashEnabled = true // Whether to enable flash or not
 
-            decodeCallback = DecodeCallback { //TODO: передавать результат на вьюмодел
-                runOnUiThread {
-                    Toast.makeText(
-                        this@ScannerActivity,
-                        "Scan result: ${it.text}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+            decodeCallback = DecodeCallback { scan ->
+                runOnUiThread { viewModel.processScan(scan.text) }
             }
 
             errorCallback = ErrorCallback { //TODO: передавать результат на вьюмодел
@@ -113,7 +109,4 @@ class ScannerActivity : AppCompatActivity() {
             .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
     }
 }
-
-
-
 

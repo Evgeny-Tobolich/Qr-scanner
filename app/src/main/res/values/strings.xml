@@ -14,6 +14,7 @@
     <string name="open_in_browser">открыть ссылку</string>
     <string name="copy_button">копия</string>
     <string name="share_button">поделиться</string>
+    <string name="scanResultText_text"></string>
 
 
 </resources>
