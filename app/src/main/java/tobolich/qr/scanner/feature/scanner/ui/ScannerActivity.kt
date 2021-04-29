@@ -30,7 +30,7 @@ class ScannerActivity : AppCompatActivity() {
         setContentView(binding.root)
         init(isInitial = true)
 
-        viewModel.scanResultliveData.observe(this) { scan ->
+        viewModel.scanResultLiveData.observe(this) { scan ->
             binding.scanResultText.text = scan.string
         }
     }

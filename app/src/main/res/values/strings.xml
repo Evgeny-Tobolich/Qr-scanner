@@ -10,9 +10,9 @@
 
     <!-- buttons strings -->
     <string name="done">Готово!</string>
-    <string name="copy_toast">Скопировано</string>
+    <string name="copied">Скопировано</string>
     <string name="open_in_browser">открыть ссылку</string>
-    <string name="copied">Скопировать</string>
+    <string name="copу">Скопировать</string>
     <string name="share">Поделиться</string>
 
 </resources>

@@ -16,7 +16,7 @@ fun Activity.copy(string: String) {
     val clipData = ClipData.newPlainText("Copy", string)
     clipboardManager.setPrimaryClip(clipData)
 
-    Toast.makeText(this, getString(R.string.copy_toast), Toast.LENGTH_SHORT).show()
+    Toast.makeText(this, getString(R.string.copied), Toast.LENGTH_SHORT).show()
 }
 
 fun Activity.share(string: String) {
