@@ -30,9 +30,9 @@ class ScannerActivity : AppCompatActivity() {
         setContentView(binding.root)
         init(isInitial = true)
 
-        viewModel.scanReservliveData.observe(this, { scan ->
+        viewModel.scanResultliveData.observe(this) { scan ->
             binding.scanResultText.text = scan.string
-        })
+        }
     }
 
     override fun onRequestPermissionsResult(
