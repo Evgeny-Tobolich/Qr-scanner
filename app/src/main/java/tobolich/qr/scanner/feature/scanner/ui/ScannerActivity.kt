@@ -4,11 +4,10 @@ import android.Manifest.permission.CAMERA
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
@@ -23,16 +22,15 @@ class ScannerActivity : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
     private lateinit var codeScannerView: CodeScannerView
     private lateinit var binding: ScannerActivityBinding
-    private lateinit var viewModel: ScannerViewModel
+    private val viewModel: ScannerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ScannerActivityBinding.inflate(layoutInflater)
-        viewModel = ViewModelProvider(this).get(ScannerViewModel::class.java)
         setContentView(binding.root)
         init(isInitial = true)
 
-        viewModel.liveData.observe(this, Observer { scan ->
+        viewModel.scanReservliveData.observe(this, { scan ->
             binding.scanResultText.text = scan.string
         })
     }
@@ -42,6 +40,7 @@ class ScannerActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == RC_PERMISSION_CAMERA) init(isInitial = false)
     }
 

@@ -9,12 +9,10 @@
     <string name="error_dialog_title">Ошибка!</string>
 
     <!-- buttons strings -->
-    <string name="done_result_text">Готово!</string>
-    <string name="copy_toast_text">Скопировано</string>
+    <string name="done_result">Готово!</string>
+    <string name="copy_toast">Скопировано</string>
     <string name="open_in_browser">открыть ссылку</string>
-    <string name="copy_button">копия</string>
-    <string name="share_button">поделиться</string>
-    <string name="scanResultText_text"></string>
-
+    <string name="copy">копия</string>
+    <string name="share">поделиться</string>
 
 </resources>
