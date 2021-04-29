@@ -3,6 +3,7 @@ package tobolich.qr.scanner.feature.scanner.ui
 import android.Manifest.permission.CAMERA
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
+import tobolich.qr.scanner.common.utils.copy
+import tobolich.qr.scanner.common.utils.openInBrowser
+import tobolich.qr.scanner.common.utils.share
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
 import tobolich.qr.scanner.feature.scanner.presentation.ScannerViewModel
 
@@ -31,7 +35,25 @@ class ScannerActivity : AppCompatActivity() {
         init(isInitial = true)
 
         viewModel.scanResultLiveData.observe(this) { scan ->
+
             binding.scanResultText.text = scan.string
+
+            binding.openInBrowserButton.visibility = LinearLayout.VISIBLE
+            binding.copyButton.visibility = LinearLayout.VISIBLE
+            binding.shareButton.visibility = LinearLayout.VISIBLE
+            binding.doneText.visibility = LinearLayout.VISIBLE
+
+            binding.copyButton.setOnClickListener {
+                copy(scan.string)
+            }
+
+            binding.openInBrowserButton.setOnClickListener {
+                openInBrowser(scan.string)
+            }
+
+            binding.shareButton.setOnClickListener {
+                share(scan.string)
+            }
         }
     }
 

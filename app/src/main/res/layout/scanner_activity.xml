@@ -66,7 +66,8 @@
                     android:text="@string/done"
                     android:textAlignment="center"
                     android:textColor="@color/green"
-                    android:textSize="@dimen/text_size_large" />
+                    android:textSize="@dimen/text_size_large"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <TextView
@@ -76,6 +77,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="8dp"
                 android:gravity="center"
+                android:text="@string/prompt"
                 android:textColor="@color/black"
                 android:textSize="@dimen/text_size_normal" />
 
@@ -99,7 +101,8 @@
                 android:layout_marginEnd="44dp"
                 android:layout_marginBottom="16dp"
                 android:text="@string/open_in_browser"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -117,7 +120,8 @@
                 android:layout_margin="8dp"
                 android:layout_weight="1"
                 android:text="@string/copу"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/shareButton"
@@ -126,7 +130,8 @@
                 android:layout_margin="8dp"
                 android:layout_weight="1"
                 android:text="@string/share"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>
