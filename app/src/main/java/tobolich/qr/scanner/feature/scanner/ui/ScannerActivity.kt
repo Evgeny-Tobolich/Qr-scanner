@@ -3,7 +3,7 @@ package tobolich.qr.scanner.feature.scanner.ui
 import android.Manifest.permission.CAMERA
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
-import android.widget.LinearLayout
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -36,12 +36,7 @@ class ScannerActivity : AppCompatActivity() {
 
         viewModel.scanResultLiveData.observe(this) { scan ->
 
-            binding.scanResultText.text = scan.string
-
-            binding.openInBrowserButton.visibility = LinearLayout.VISIBLE
-            binding.copyButton.visibility = LinearLayout.VISIBLE
-            binding.shareButton.visibility = LinearLayout.VISIBLE
-            binding.doneText.visibility = LinearLayout.VISIBLE
+            renderScanResult(scan.string)
 
             binding.copyButton.setOnClickListener {
                 copy(scan.string)
@@ -79,7 +74,7 @@ class ScannerActivity : AppCompatActivity() {
     private fun init(isInitial: Boolean) = when {
         hasPermissionCamera() -> initScanner()
         isInitial -> requestPermissionCamera()
-        else -> showErrorDialog()
+        else -> showRequestCameraPermissionDialog()
     }
 
     private fun initScanner() {
@@ -124,10 +119,21 @@ class ScannerActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, arrayOf(CAMERA), RC_PERMISSION_CAMERA)
     }
 
-    //TODO: переименовать  к RequestCameraPermissionDialog
-    private fun showErrorDialog() {
+    private fun showRequestCameraPermissionDialog() {
         RequestCameraPermissionDialog.newInstance()
             .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
+    }
+
+    private fun renderScanResult(string: String) {
+
+        binding.scanResultText.text = string
+
+        if (binding.scanResultText.text != "") {
+            binding.openInBrowserButton.visibility = View.VISIBLE
+            binding.copyButton.visibility = View.VISIBLE
+            binding.shareButton.visibility = View.VISIBLE
+            binding.doneText.visibility = View.VISIBLE
+        }
     }
 }
 
