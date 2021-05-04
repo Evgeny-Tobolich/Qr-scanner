@@ -10,11 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
+import tobolich.qr.scanner.R
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
 import tobolich.qr.scanner.common.utils.copy
 import tobolich.qr.scanner.common.utils.openInBrowser
 import tobolich.qr.scanner.common.utils.share
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
+import tobolich.qr.scanner.domain.scanner.model.ScanResult
 import tobolich.qr.scanner.feature.scanner.presentation.ScannerViewModel
 
 class ScannerActivity : AppCompatActivity() {
@@ -36,18 +38,22 @@ class ScannerActivity : AppCompatActivity() {
 
         viewModel.scanResultLiveData.observe(this) { scan ->
 
-            renderScanResult(scan.string)
+            binding.scanResultText.text = scan?.string
+
+            renderScanResult(scan)
+
+            resetLiveData()
 
             binding.copyButton.setOnClickListener {
-                copy(scan.string)
+                if (scan != null) copy(scan.string)
             }
 
             binding.openInBrowserButton.setOnClickListener {
-                openInBrowser(scan.string)
+                if (scan != null) openInBrowser(scan.string)
             }
 
             binding.shareButton.setOnClickListener {
-                share(scan.string)
+                if (scan != null) share(scan.string)
             }
         }
     }
@@ -106,7 +112,7 @@ class ScannerActivity : AppCompatActivity() {
 
         with(codeScannerView) {
             setOnClickListener {
-                codeScanner.startPreview()
+                if (codeScanner.isPreviewActive) codeScanner.startPreview()
             }
         }
     }
@@ -124,16 +130,46 @@ class ScannerActivity : AppCompatActivity() {
             .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
     }
 
-    private fun renderScanResult(string: String) {
+    private fun renderScanResult(scanResult: ScanResult?) {
 
-        binding.scanResultText.text = string
+        binding.doneText.visibility = View.GONE
+        binding.newScan.visibility = View.GONE
+        binding.copyButton.visibility = View.GONE
+        binding.shareButton.visibility = View.GONE
+        binding.openInBrowserButton.visibility = View.GONE
 
-        if (binding.scanResultText.text != "") {
-            binding.openInBrowserButton.visibility = View.VISIBLE
-            binding.copyButton.visibility = View.VISIBLE
-            binding.shareButton.visibility = View.VISIBLE
-            binding.doneText.visibility = View.VISIBLE
+        when (scanResult) {
+            is ScanResult.Url -> {
+                binding.doneText.visibility = View.VISIBLE
+                binding.newScan.visibility = View.VISIBLE
+                binding.copyButton.visibility = View.VISIBLE
+                binding.shareButton.visibility = View.VISIBLE
+                binding.openInBrowserButton.visibility = View.VISIBLE
+            }
+            is ScanResult.Phone -> {
+                binding.doneText.visibility = View.VISIBLE
+                binding.newScan.visibility = View.VISIBLE
+                binding.copyButton.visibility = View.VISIBLE
+                binding.shareButton.visibility = View.VISIBLE
+            }
+            is ScanResult.Text -> {
+                binding.doneText.visibility = View.VISIBLE
+                binding.newScan.visibility = View.VISIBLE
+                binding.copyButton.visibility = View.VISIBLE
+                binding.shareButton.visibility = View.VISIBLE
+                binding.openInBrowserButton.visibility = View.VISIBLE
+            }
         }
     }
+
+    private fun resetLiveData() {
+        binding.newScan.setOnClickListener {
+            viewModel.reset()
+            codeScanner.startPreview()
+            binding.newScan.visibility = View.GONE
+            binding.scanResultText.text = getString(R.string.scanner_hint)
+        }
+    }
+
 }
 
