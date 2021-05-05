@@ -61,7 +61,6 @@ fun Activity.callPhoneNumber(string: String) {
     val intent = Intent(Intent.ACTION_DIAL)
         .apply { data = Uri.parse("tel:$string") }
 
-    if (intent.resolveActivity(packageManager) != null)
-        startActivity(intent)
+    if (intent.resolveActivity(packageManager) != null) startActivity(intent)
 }
 
