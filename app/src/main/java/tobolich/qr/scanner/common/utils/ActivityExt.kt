@@ -7,7 +7,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.ContactsContract
 import android.util.Patterns
 import android.widget.Toast
 import tobolich.qr.scanner.R
@@ -57,9 +56,12 @@ fun Activity.openInBrowserAsQueryInGoogle(string: String) {
     startActivity(intent)
 }
 
-fun Activity.phone(string: String) {
-    val intent = Intent(Intent.ACTION_CALL)
-        .apply { data = Uri.parse(string) }
-    startActivity(intent)
+@SuppressLint("QueryPermissionsNeeded")
+fun Activity.callPhoneNumber(string: String) {
+    val intent = Intent(Intent.ACTION_DIAL)
+        .apply { data = Uri.parse("tel:$string") }
+
+    if (intent.resolveActivity(packageManager) != null)
+        startActivity(intent)
 }
 

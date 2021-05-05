@@ -12,11 +12,10 @@ import androidx.core.content.ContextCompat
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.R
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
-import tobolich.qr.scanner.common.utils.copy
-import tobolich.qr.scanner.common.utils.openInBrowser
-import tobolich.qr.scanner.common.utils.share
+import tobolich.qr.scanner.common.utils.*
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
 import tobolich.qr.scanner.domain.scanner.model.ScanResult
+import tobolich.qr.scanner.domain.scanner.model.ScanResult.*
 import tobolich.qr.scanner.feature.scanner.presentation.ScannerViewModel
 
 class ScannerActivity : AppCompatActivity() {
@@ -38,23 +37,11 @@ class ScannerActivity : AppCompatActivity() {
 
         viewModel.scanResultLiveData.observe(this) { scan ->
 
-            binding.scanResultText.text = scan?.string
-
             renderScanResult(scan)
 
-            resetLiveData()
+            resetScanScreen()
 
-            binding.copyButton.setOnClickListener {
-                if (scan != null) copy(scan.string)
-            }
-
-            binding.openInBrowserButton.setOnClickListener {
-                if (scan != null) openInBrowser(scan.string)
-            }
-
-            binding.shareButton.setOnClickListener {
-                if (scan != null) share(scan.string)
-            }
+            bindButtons(scan)
         }
     }
 
@@ -92,8 +79,8 @@ class ScannerActivity : AppCompatActivity() {
             formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
             autoFocusMode = AutoFocusMode.SAFE // SAfE or CONTINUOUS
             scanMode = ScanMode.SINGLE // SINGLE or CONTINUOUS or PREVIEW
-            isAutoFocusEnabled = true // Whether to enable auto focus or not
-            isFlashEnabled = true // Whether to enable flash or not
+            isAutoFocusEnabled = true
+            isFlashEnabled = true
 
             decodeCallback = DecodeCallback { scan ->
                 runOnUiThread { viewModel.processScan(scan.text) }
@@ -107,12 +94,6 @@ class ScannerActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            }
-        }
-
-        with(codeScannerView) {
-            setOnClickListener {
-                if (codeScanner.isPreviewActive) codeScanner.startPreview()
             }
         }
     }
@@ -132,44 +113,67 @@ class ScannerActivity : AppCompatActivity() {
 
     private fun renderScanResult(scanResult: ScanResult?) {
 
+        binding.scanResultText.text = scanResult?.string
+
+        isGoneButtons()
+
+        if (scanResult != null) {
+            openDefultButtons(scanResult).also {
+                when (scanResult) {
+                    is Url -> binding.openInBrowserButton.visibility = View.VISIBLE
+                    is Phone -> binding.openInBrowserButton.visibility = View.VISIBLE
+                    else -> binding.openInBrowserButton.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    //TODO: заменить на ScannerState
+    private fun resetScanScreen() {
+        binding.newScan.setOnClickListener {
+            viewModel.resetScanResult()
+            codeScanner.startPreview()
+            isGoneButtons()
+            binding.scanResultText.text = getString(R.string.scanner_hint)
+        }
+    }
+
+    //TODO: добавить кнопку для номера телефона
+    private fun bindButtons(scanResult: ScanResult?) {
+        if (scanResult != null) {
+            binding.copyButton.setOnClickListener {
+                copy(scanResult.string)
+            }
+
+            binding.openInBrowserButton.setOnClickListener {
+                openInBrowser(scanResult.string)
+            }
+
+            binding.shareButton.setOnClickListener {
+                share(scanResult.string)
+            }
+        }
+    }
+
+    private fun openDefultButtons(scanResult: ScanResult?) = when (scanResult) {
+        is Url -> isVisibleButtons()
+        is Phone -> isVisibleButtons()
+        else -> isVisibleButtons()
+    }
+
+    private fun isGoneButtons() {
         binding.doneText.visibility = View.GONE
         binding.newScan.visibility = View.GONE
         binding.copyButton.visibility = View.GONE
         binding.shareButton.visibility = View.GONE
         binding.openInBrowserButton.visibility = View.GONE
-
-        when (scanResult) {
-            is ScanResult.Url -> {
-                binding.doneText.visibility = View.VISIBLE
-                binding.newScan.visibility = View.VISIBLE
-                binding.copyButton.visibility = View.VISIBLE
-                binding.shareButton.visibility = View.VISIBLE
-                binding.openInBrowserButton.visibility = View.VISIBLE
-            }
-            is ScanResult.Phone -> {
-                binding.doneText.visibility = View.VISIBLE
-                binding.newScan.visibility = View.VISIBLE
-                binding.copyButton.visibility = View.VISIBLE
-                binding.shareButton.visibility = View.VISIBLE
-            }
-            is ScanResult.Text -> {
-                binding.doneText.visibility = View.VISIBLE
-                binding.newScan.visibility = View.VISIBLE
-                binding.copyButton.visibility = View.VISIBLE
-                binding.shareButton.visibility = View.VISIBLE
-                binding.openInBrowserButton.visibility = View.VISIBLE
-            }
-        }
     }
 
-    private fun resetLiveData() {
-        binding.newScan.setOnClickListener {
-            viewModel.reset()
-            codeScanner.startPreview()
-            binding.newScan.visibility = View.GONE
-            binding.scanResultText.text = getString(R.string.scanner_hint)
-        }
+    private fun isVisibleButtons() {
+        binding.doneText.visibility = View.VISIBLE
+        binding.newScan.visibility = View.VISIBLE
+        binding.copyButton.visibility = View.VISIBLE
+        binding.shareButton.visibility = View.VISIBLE
     }
-
 }
 

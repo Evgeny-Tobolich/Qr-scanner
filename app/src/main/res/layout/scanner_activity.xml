@@ -63,7 +63,7 @@
             <LinearLayout
                 android:id="@+id/resultTextLayout"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -72,7 +72,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="1dp"
                     android:text="@string/done"
                     android:textAlignment="center"
                     android:textColor="@color/green"
@@ -85,7 +84,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="top"
-                android:layout_margin="2dp"
                 android:gravity="center"
                 android:text="@string/scanner_hint"
                 android:textColor="@color/black"
@@ -103,11 +101,9 @@
 
             <Button
                 android:id="@+id/openInBrowserButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="44dp"
-                android:layout_marginEnd="44dp"
                 android:text="@string/open_in_browser"
                 android:textAllCaps="true"
                 android:visibility="gone" />
@@ -123,7 +119,7 @@
 
             <Button
                 android:id="@+id/copyButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
@@ -134,7 +130,7 @@
 
             <Button
                 android:id="@+id/shareButton"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
