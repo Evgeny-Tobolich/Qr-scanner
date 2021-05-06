@@ -14,5 +14,7 @@
     <string name="open_in_browser">открыть ссылку</string>
     <string name="copу">Скопировать</string>
     <string name="share">Поделиться</string>
+    <string name="scanner_hint">Наведите сканер на QR код</string>
+    <string name="new_scan">Сканировать заново</string>
 
 </resources>

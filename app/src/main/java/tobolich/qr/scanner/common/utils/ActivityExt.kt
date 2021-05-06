@@ -47,12 +47,20 @@ fun Activity.openInBrowserAsURL(string: String) {
     val intent = Intent(Intent.ACTION_VIEW)
         .apply { data = Uri.parse(url) }
 
-    if (intent.resolveActivity(packageManager) == null) startActivity(intent)
+    if (intent.resolveActivity(packageManager) != null) startActivity(intent)
 }
 
 fun Activity.openInBrowserAsQueryInGoogle(string: String) {
     val intent = Intent(Intent.ACTION_VIEW)
         .apply { data = Uri.parse("https://www.google.com/search?q=$string") }
     startActivity(intent)
+}
+
+@SuppressLint("QueryPermissionsNeeded")
+fun Activity.callPhoneNumber(string: String) {
+    val intent = Intent(Intent.ACTION_DIAL)
+        .apply { data = Uri.parse("tel:$string") }
+
+    if (intent.resolveActivity(packageManager) != null) startActivity(intent)
 }
 
