@@ -64,7 +64,9 @@ class ScannerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.i("Scanner", "onResume()")
-        if (hasPermissionCamera() && viewModel.scanResultLiveData.value == null) codeScanner.startPreview()
+        if (hasPermissionCamera() && viewModel.scanResultLiveData.value == null) {
+            codeScanner.startPreview()
+        }
     }
 
     override fun onPause() {
