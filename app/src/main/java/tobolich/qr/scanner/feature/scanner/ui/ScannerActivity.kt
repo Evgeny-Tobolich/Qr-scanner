@@ -38,9 +38,9 @@ class ScannerActivity : AppCompatActivity() {
         setContentView(binding.root)
         init(isInitial = true)
 
-        viewModel.stateLiveData.observe(this) { state ->
-            renderState(state)
-        }
+        viewModel.state.observe(this, ::renderState)
+
+        initNewScanListener()
     }
 
     override fun onRequestPermissionsResult(
@@ -60,7 +60,7 @@ class ScannerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.i("Scanner", "onResume()")
-        if (hasPermissionCamera() && viewModel.stateLiveData.value == null) {
+        if (hasPermissionCamera() && viewModel.state.value == null) {
             codeScanner.startPreview()
         }
     }
@@ -136,10 +136,7 @@ class ScannerActivity : AppCompatActivity() {
 
     private fun renderState(state: ScannerState) = when (state) {
         is Idle -> renderIdleState()
-        is Scanned -> {
-            renderScannedState(state)
-            initClickListeners(state.scanResult.string)
-        }
+        is Scanned -> renderScannedState(state)
     }
 
     private fun renderIdleState() {
@@ -153,7 +150,7 @@ class ScannerActivity : AppCompatActivity() {
         is Text -> {
             renderScanResultText(scanned.scanResult.string)
             renderScanResultButtons(isVisible = true)
-            resetScanScreen()
+            initClickListeners(scanned.scanResult.string)
         }
     }
 
@@ -173,8 +170,7 @@ class ScannerActivity : AppCompatActivity() {
         binding.newScan.isVisible = isVisible
     }
 
-    //TODO: заменить на ScannerState
-    private fun resetScanScreen() {
+    private fun initNewScanListener() {
         binding.newScan.setOnClickListener {
             viewModel.resetScanResult()
             codeScanner.startPreview()

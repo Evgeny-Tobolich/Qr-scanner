@@ -9,9 +9,9 @@ import tobolich.qr.scanner.domain.scanner.validators.IsUrlValidator
 
 class ScannerViewModel : ViewModel() {
 
-    private val stateMutableLiveData = MutableLiveData<ScannerState>()
+    private val stateProducer = MutableLiveData<ScannerState>()
         .apply { ScannerState.Idle }
-    val stateLiveData: LiveData<ScannerState> = stateMutableLiveData
+    val state: LiveData<ScannerState> = stateProducer
 
     private val processScanResultInteractor: ProcessScanResultInteractor
         get() = ProcessScanResultInteractor(isPhoneValidator, isUrlValidator)
@@ -23,12 +23,12 @@ class ScannerViewModel : ViewModel() {
         get() = IsUrlValidator()
 
     fun processScan(string: String) {
-        stateMutableLiveData.value =
+        stateProducer.value =
             ScannerState.Scanned(processScanResultInteractor.execute(string))
     }
 
     fun resetScanResult() {
-        stateMutableLiveData.value = ScannerState.Idle
+        stateProducer.value = ScannerState.Idle
     }
 }
 
