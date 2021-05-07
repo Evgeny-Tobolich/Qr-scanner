@@ -9,7 +9,7 @@ import tobolich.qr.scanner.domain.scanner.validators.IsUrlValidator
 
 class ScannerViewModel : ViewModel() {
 
-    private val stateMutableLiveData = MutableLiveData<ScannerState>()
+    private val stateProducer = MutableLiveData<ScannerState>()
         .apply { ScannerState.Idle }
     val stateLiveData: LiveData<ScannerState> = stateMutableLiveData
 
@@ -31,4 +31,3 @@ class ScannerViewModel : ViewModel() {
         stateMutableLiveData.value = ScannerState.Idle
     }
 }
-
