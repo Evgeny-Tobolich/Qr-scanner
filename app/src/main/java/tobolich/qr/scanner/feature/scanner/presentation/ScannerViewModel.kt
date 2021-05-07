@@ -31,4 +31,3 @@ class ScannerViewModel : ViewModel() {
         stateProducer.value = ScannerState.Idle
     }
 }
-
