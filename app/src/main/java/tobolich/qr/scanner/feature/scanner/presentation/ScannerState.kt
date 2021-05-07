@@ -1,10 +1,11 @@
 package tobolich.qr.scanner.feature.scanner.presentation
 
-sealed class ScannerState
+import tobolich.qr.scanner.domain.scanner.model.ScanResult
 
-class Idle(string: String) : ScannerState()
+sealed class ScannerState {
 
-class Scaned(string: String) : ScannerState()
+    object Idle : ScannerState()
 
-fun checkScannerState(scannerState: ScannerState) {}
+    data class Scanned(val scanResult: ScanResult) : ScannerState()
+}
 

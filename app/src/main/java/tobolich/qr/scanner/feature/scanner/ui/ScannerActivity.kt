@@ -15,8 +15,9 @@ import tobolich.qr.scanner.R
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
 import tobolich.qr.scanner.common.utils.*
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
-import tobolich.qr.scanner.domain.scanner.model.ScanResult
 import tobolich.qr.scanner.domain.scanner.model.ScanResult.*
+import tobolich.qr.scanner.feature.scanner.presentation.ScannerState
+import tobolich.qr.scanner.feature.scanner.presentation.ScannerState.*
 import tobolich.qr.scanner.feature.scanner.presentation.ScannerViewModel
 
 class ScannerActivity : AppCompatActivity() {
@@ -37,13 +38,8 @@ class ScannerActivity : AppCompatActivity() {
         setContentView(binding.root)
         init(isInitial = true)
 
-        viewModel.scanResultLiveData.observe(this) { scan ->
-
-            renderScanResult(scan)
-
-            resetScanScreen()
-
-            initClickListeners(scan)
+        viewModel.stateLiveData.observe(this) { state ->
+            renderState(state)
         }
     }
 
@@ -64,7 +60,7 @@ class ScannerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.i("Scanner", "onResume()")
-        if (hasPermissionCamera() && viewModel.scanResultLiveData.value == null) {
+        if (hasPermissionCamera() && viewModel.stateLiveData.value == null) {
             codeScanner.startPreview()
         }
     }
@@ -138,18 +134,26 @@ class ScannerActivity : AppCompatActivity() {
             .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
     }
 
-    private fun renderScanResult(scanResult: ScanResult?) = when (scanResult) {
+    private fun renderState(state: ScannerState) = when (state) {
+        is Idle -> renderIdleState()
+        is Scanned -> {
+            renderScannedState(state)
+            initClickListeners(state.scanResult.string)
+        }
+    }
+
+    private fun renderIdleState() {
+        renderScanResultTextWithHint()
+        renderScanResultButtons(isVisible = false)
+    }
+
+    private fun renderScannedState(scanned: Scanned) = when (scanned.scanResult) {
         is Url,
         is Phone,
         is Text -> {
-            renderScanResultText(scanResult.string)
+            renderScanResultText(scanned.scanResult.string)
             renderScanResultButtons(isVisible = true)
-            renderNewScanButton(isVisible = true)
-        }
-        null -> {
-            renderScanResultTextWithHint()
-            renderScanResultButtons(isVisible = false)
-            renderNewScanButton(isVisible = false)
+            resetScanScreen()
         }
     }
 
@@ -166,9 +170,6 @@ class ScannerActivity : AppCompatActivity() {
         binding.shareButton.isVisible = isVisible
         binding.openInBrowserButton.isVisible = isVisible
         binding.doneText.isVisible = isVisible
-    }
-
-    private fun renderNewScanButton(isVisible: Boolean) {
         binding.newScan.isVisible = isVisible
     }
 
@@ -182,20 +183,20 @@ class ScannerActivity : AppCompatActivity() {
     }
 
     //TODO: добавить кнопку для номера телефона
-    private fun initClickListeners(scanResult: ScanResult?) {
-        if (scanResult != null) {
-            binding.copyButton.setOnClickListener {
-                copy(scanResult.string)
-            }
+    private fun initClickListeners(string: String) {
 
-            binding.openInBrowserButton.setOnClickListener {
-                openInBrowser(scanResult.string)
-            }
+        binding.copyButton.setOnClickListener {
+            copy(string)
+        }
 
-            binding.shareButton.setOnClickListener {
-                share(scanResult.string)
-            }
+        binding.openInBrowserButton.setOnClickListener {
+            openInBrowser(string)
+        }
+
+        binding.shareButton.setOnClickListener {
+            share(string)
         }
     }
+
 }
 
