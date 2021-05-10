@@ -3,16 +3,13 @@
 ###### QR scanner for [Android](https://developer.android.com/)
 
 ### Scanning functions:     
-* QR-codes
-* Fotos
-* Documents
-* Bank cards
+* QR-code
+* Phone
 ***
 ### Additionally:
 * Auto-focus control
 * Flash control
 * Touch focus
-* Back/Front camera
 ***
 ### Advantages
 * Ease
