@@ -51,7 +51,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/newScan"
+                android:id="@+id/newScanButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -100,11 +100,11 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/openInBrowserButton"
+                android:id="@+id/openResultButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/open_in_browser"
+                android:text="@string/open"
                 android:textAllCaps="true"
                 android:visibility="gone" />
         </LinearLayout>

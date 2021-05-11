@@ -13,6 +13,9 @@ class ScannerViewModel : ViewModel() {
         .apply { ScannerState.Idle }
     val state: LiveData<ScannerState> = stateProducer
 
+    private val errorProducer = MutableLiveData<Throwable>() //TODO: заменить на EventLiveData
+    val error: LiveData<Throwable> = errorProducer
+
     private val processScanResultInteractor: ProcessScanResultInteractor
         get() = ProcessScanResultInteractor(isPhoneValidator, isUrlValidator)
 
@@ -29,5 +32,9 @@ class ScannerViewModel : ViewModel() {
 
     fun resetScanResult() {
         stateProducer.value = ScannerState.Idle
+    }
+
+    fun showErrorDialog(error: Throwable) {
+        errorProducer.value = error
     }
 }

@@ -4,7 +4,6 @@ import android.Manifest.permission.CAMERA
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -12,12 +11,17 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.budiyev.android.codescanner.*
 import tobolich.qr.scanner.R
+import tobolich.qr.scanner.common.dialogs.ErrorDialog
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
-import tobolich.qr.scanner.common.utils.*
+import tobolich.qr.scanner.common.utils.callPhoneNumber
+import tobolich.qr.scanner.common.utils.copy
+import tobolich.qr.scanner.common.utils.openResult
+import tobolich.qr.scanner.common.utils.share
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
 import tobolich.qr.scanner.domain.scanner.model.ScanResult.*
 import tobolich.qr.scanner.feature.scanner.presentation.ScannerState
-import tobolich.qr.scanner.feature.scanner.presentation.ScannerState.*
+import tobolich.qr.scanner.feature.scanner.presentation.ScannerState.Idle
+import tobolich.qr.scanner.feature.scanner.presentation.ScannerState.Scanned
 import tobolich.qr.scanner.feature.scanner.presentation.ScannerViewModel
 
 class ScannerActivity : AppCompatActivity() {
@@ -40,6 +44,8 @@ class ScannerActivity : AppCompatActivity() {
 
         viewModel.state.observe(this, ::renderState)
 
+        viewModel.error.observe(this, ::showErrorDialog)
+
         initNewScanListener()
     }
 
@@ -60,7 +66,7 @@ class ScannerActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.i("Scanner", "onResume()")
-        if (hasPermissionCamera() && viewModel.state.value == null) {
+        if (hasPermissionCamera() && viewModel.state.value is Idle?) {
             codeScanner.startPreview()
         }
     }
@@ -86,7 +92,6 @@ class ScannerActivity : AppCompatActivity() {
         Log.i("Scanner", "onDestroy()")
     }
 
-
     private fun init(isInitial: Boolean) = when {
         hasPermissionCamera() -> initScanner()
         isInitial -> requestPermissionCamera()
@@ -98,10 +103,10 @@ class ScannerActivity : AppCompatActivity() {
         codeScanner = CodeScanner(this, codeScannerView)
 
         with(codeScanner) {
-            camera = CodeScanner.CAMERA_BACK //CAMERA_BACK or CAMERA_FRONT or specific camera id
-            formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-            autoFocusMode = AutoFocusMode.SAFE // SAfE or CONTINUOUS
-            scanMode = ScanMode.SINGLE // SINGLE or CONTINUOUS or PREVIEW
+            camera = CodeScanner.CAMERA_BACK
+            formats = CodeScanner.ALL_FORMATS
+            autoFocusMode = AutoFocusMode.SAFE
+            scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
             isFlashEnabled = true
 
@@ -109,14 +114,8 @@ class ScannerActivity : AppCompatActivity() {
                 runOnUiThread { viewModel.processScan(scan.text) }
             }
 
-            errorCallback = ErrorCallback { //TODO: передавать результат на вьюмодел
-                runOnUiThread {
-                    Toast.makeText(
-                        this@ScannerActivity,
-                        "Camera error: ${it.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            errorCallback = ErrorCallback { error ->
+                runOnUiThread { viewModel.showErrorDialog(error) }
             }
         }
     }
@@ -134,6 +133,11 @@ class ScannerActivity : AppCompatActivity() {
             .show(supportFragmentManager, RequestCameraPermissionDialog.TAG)
     }
 
+    private fun showErrorDialog(error: Throwable) {
+        ErrorDialog.newInstance(error)
+            .show(supportFragmentManager, ErrorDialog.TAG)
+    }
+
     private fun renderState(state: ScannerState) = when (state) {
         is Idle -> renderIdleState()
         is Scanned -> renderScannedState(state)
@@ -146,47 +150,44 @@ class ScannerActivity : AppCompatActivity() {
 
     private fun renderScannedState(scanned: Scanned) = when (scanned.scanResult) {
         is Url,
-        is Phone,
-        is Text -> {
-            renderScanResultText(scanned.scanResult.string)
-            renderScanResultButtons(isVisible = true)
-            initClickListeners(scanned.scanResult.string)
-        }
+        is Text -> renderUrl(scanned.scanResult.string)
+        is Phone -> renderPhone(scanned.scanResult.string)
     }
 
     private fun renderScanResultTextWithHint() {
         renderScanResultText(getString(R.string.scanner_hint))
     }
 
+    private fun renderScanResultButtons(isVisible: Boolean) {
+        binding.copyButton.isVisible = isVisible
+        binding.shareButton.isVisible = isVisible
+        binding.openResultButton.isVisible = isVisible
+        binding.doneText.isVisible = isVisible
+        binding.newScanButton.isVisible = isVisible
+    }
+
+    private fun renderUrl(string: String) {
+        renderScanResultButtons(isVisible = true)
+        renderScanResultText(string)
+        initClickListeners(string)
+        initUrlListener(string)
+    }
+
+    private fun renderPhone(string: String) {
+        renderScanResultButtons(isVisible = true)
+        renderScanResultText(string)
+        initClickListeners(string)
+        initPhoneListener(string)
+    }
+
     private fun renderScanResultText(string: String) {
         binding.scanResultText.text = string
     }
 
-    private fun renderScanResultButtons(isVisible: Boolean) {
-        binding.copyButton.isVisible = isVisible
-        binding.shareButton.isVisible = isVisible
-        binding.openInBrowserButton.isVisible = isVisible
-        binding.doneText.isVisible = isVisible
-        binding.newScan.isVisible = isVisible
-    }
-
-    private fun initNewScanListener() {
-        binding.newScan.setOnClickListener {
-            viewModel.resetScanResult()
-            codeScanner.startPreview()
-            renderScanResultTextWithHint()
-        }
-    }
-
-    //TODO: добавить кнопку для номера телефона
     private fun initClickListeners(string: String) {
 
         binding.copyButton.setOnClickListener {
             copy(string)
-        }
-
-        binding.openInBrowserButton.setOnClickListener {
-            openInBrowser(string)
         }
 
         binding.shareButton.setOnClickListener {
@@ -194,5 +195,28 @@ class ScannerActivity : AppCompatActivity() {
         }
     }
 
+    private fun initUrlListener(string: String) {
+        binding.openResultButton.setOnClickListener {
+            openResult(string)
+        }
+
+        binding.openResultButton.text = getString(R.string.open_in_browser)
+    }
+
+    private fun initPhoneListener(string: String) {
+        binding.openResultButton.setOnClickListener {
+            callPhoneNumber(string)
+        }
+
+        binding.openResultButton.text = getString(R.string.call)
+    }
+
+    private fun initNewScanListener() {
+        binding.newScanButton.setOnClickListener {
+            viewModel.resetScanResult()
+            codeScanner.startPreview()
+            renderScanResultTextWithHint()
+        }
+    }
 }
 
