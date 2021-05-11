@@ -9,7 +9,7 @@ import tobolich.qr.scanner.R
 class ErrorDialog : DialogFragment() {
 
     companion object {
-        val TAG = ErrorDialog::class.java.simpleName
+        val TAG: String = ErrorDialog::class.java.simpleName
         private const val ARG_MESSAGE = "ARG_MESSAGE"
 
         fun newInstance(throwable: Throwable): ErrorDialog {

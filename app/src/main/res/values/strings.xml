@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">QR Scanner</string>
 
+    <!-- TODO: добавить языковую адаптацию  -->
+
     <!-- camera permission dialog -->
     <string name="camera_permission_dialog_message">Необходимо разрешение на использование камеры</string>
     <string name="camera_permission_dialog_title">Обратите внимание</string>
@@ -17,5 +19,6 @@
     <string name="scanner_hint">Наведите сканер на QR код</string>
     <string name="new_scan">Сканировать заново</string>
     <string name="call">Позвонить</string>
+    <string name="open">Открыть</string>
 
 </resources>

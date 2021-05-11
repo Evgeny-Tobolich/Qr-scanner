@@ -3,7 +3,6 @@ package tobolich.qr.scanner.feature.scanner.presentation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import tobolich.qr.scanner.common.dialogs.ErrorDialog
 import tobolich.qr.scanner.domain.scanner.ProcessScanResultInteractor
 import tobolich.qr.scanner.domain.scanner.validators.IsPhoneValidator
 import tobolich.qr.scanner.domain.scanner.validators.IsUrlValidator
@@ -14,7 +13,7 @@ class ScannerViewModel : ViewModel() {
         .apply { ScannerState.Idle }
     val state: LiveData<ScannerState> = stateProducer
 
-    private val errorProducer = MutableLiveData<Throwable>()
+    private val errorProducer = MutableLiveData<Throwable>() //TODO: заменить на EventLiveData
     val error: LiveData<Throwable> = errorProducer
 
     private val processScanResultInteractor: ProcessScanResultInteractor

@@ -29,7 +29,7 @@ fun Activity.share(string: String) {
     startActivity(shareIntent)
 }
 
-fun Activity.openInBrowser(string: String) =
+fun Activity.openResult(string: String) =
     if (Patterns.WEB_URL.matcher(string).matches()) {
         openInBrowserAsURL(string)
     } else {

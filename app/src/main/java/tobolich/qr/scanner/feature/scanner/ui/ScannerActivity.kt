@@ -15,7 +15,7 @@ import tobolich.qr.scanner.common.dialogs.ErrorDialog
 import tobolich.qr.scanner.common.dialogs.RequestCameraPermissionDialog
 import tobolich.qr.scanner.common.utils.callPhoneNumber
 import tobolich.qr.scanner.common.utils.copy
-import tobolich.qr.scanner.common.utils.openInBrowser
+import tobolich.qr.scanner.common.utils.openResult
 import tobolich.qr.scanner.common.utils.share
 import tobolich.qr.scanner.databinding.ScannerActivityBinding
 import tobolich.qr.scanner.domain.scanner.model.ScanResult.*
@@ -103,10 +103,10 @@ class ScannerActivity : AppCompatActivity() {
         codeScanner = CodeScanner(this, codeScannerView)
 
         with(codeScanner) {
-            camera = CodeScanner.CAMERA_BACK //CAMERA_BACK or CAMERA_FRONT or specific camera id
-            formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
-            autoFocusMode = AutoFocusMode.SAFE // SAfE or CONTINUOUS
-            scanMode = ScanMode.SINGLE // SINGLE or CONTINUOUS or PREVIEW
+            camera = CodeScanner.CAMERA_BACK
+            formats = CodeScanner.ALL_FORMATS
+            autoFocusMode = AutoFocusMode.SAFE
+            scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
             isFlashEnabled = true
 
@@ -158,24 +158,30 @@ class ScannerActivity : AppCompatActivity() {
         renderScanResultText(getString(R.string.scanner_hint))
     }
 
-    private fun renderScanResultText(string: String) {
-        binding.scanResultText.text = string
-    }
-
     private fun renderScanResultButtons(isVisible: Boolean) {
         binding.copyButton.isVisible = isVisible
         binding.shareButton.isVisible = isVisible
-        binding.openInBrowserButton.isVisible = isVisible
+        binding.openResultButton.isVisible = isVisible
         binding.doneText.isVisible = isVisible
-        binding.newScan.isVisible = isVisible
+        binding.newScanButton.isVisible = isVisible
     }
 
-    private fun initNewScanListener() {
-        binding.newScan.setOnClickListener {
-            viewModel.resetScanResult()
-            codeScanner.startPreview()
-            renderScanResultTextWithHint()
-        }
+    private fun renderUrl(string: String) {
+        renderScanResultButtons(isVisible = true)
+        renderScanResultText(string)
+        initClickListeners(string)
+        initUrlListener(string)
+    }
+
+    private fun renderPhone(string: String) {
+        renderScanResultButtons(isVisible = true)
+        renderScanResultText(string)
+        initClickListeners(string)
+        initPhoneListener(string)
+    }
+
+    private fun renderScanResultText(string: String) {
+        binding.scanResultText.text = string
     }
 
     private fun initClickListeners(string: String) {
@@ -190,33 +196,27 @@ class ScannerActivity : AppCompatActivity() {
     }
 
     private fun initUrlListener(string: String) {
-        binding.openInBrowserButton.setOnClickListener {
-            openInBrowser(string)
+        binding.openResultButton.setOnClickListener {
+            openResult(string)
         }
 
-        binding.openInBrowserButton.text = getString(R.string.open_in_browser)
+        binding.openResultButton.text = getString(R.string.open_in_browser)
     }
 
     private fun initPhoneListener(string: String) {
-        binding.openInBrowserButton.setOnClickListener {
+        binding.openResultButton.setOnClickListener {
             callPhoneNumber(string)
         }
 
-        binding.openInBrowserButton.text = getString(R.string.call)
+        binding.openResultButton.text = getString(R.string.call)
     }
 
-    private fun renderUrl(string: String) {
-        renderScanResultText(string)
-        renderScanResultButtons(isVisible = true)
-        initClickListeners(string)
-        initUrlListener(string)
-    }
-
-    private fun renderPhone(string: String) {
-        renderScanResultText(string)
-        renderScanResultButtons(isVisible = true)
-        initClickListeners(string)
-        initPhoneListener(string)
+    private fun initNewScanListener() {
+        binding.newScanButton.setOnClickListener {
+            viewModel.resetScanResult()
+            codeScanner.startPreview()
+            renderScanResultTextWithHint()
+        }
     }
 }
 
