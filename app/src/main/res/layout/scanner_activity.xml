@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1.25"
-        android:background="@color/white"
+        android:background="@color/pink_100"
         android:orientation="vertical"
         android:weightSum="3">
 
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.6"
-            android:background="@color/white"
+            android:background="@color/pink_100"
             android:orientation="vertical">
 
             <Button
@@ -64,7 +64,7 @@
                 android:id="@+id/resultTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:background="@color/pink_100"
                 android:orientation="vertical">
 
                 <TextView
@@ -86,8 +86,8 @@
                 android:layout_gravity="top"
                 android:gravity="center"
                 android:text="@string/scanner_hint"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_size_normal" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_large" />
 
         </LinearLayout>
 
@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1.2"
-            android:background="@color/white"
+            android:background="@color/pink_100"
             android:orientation="vertical">
 
             <Button
@@ -114,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1.2"
-            android:background="@color/white"
+            android:background="@color/pink_100"
             android:weightSum="2">
 
             <Button
