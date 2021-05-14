@@ -4,7 +4,7 @@
 
 ### Scanning functions:     
 * QR-code
-* Phone
+* Phone number
 ***
 ### Additionally:
 * Auto-focus control
