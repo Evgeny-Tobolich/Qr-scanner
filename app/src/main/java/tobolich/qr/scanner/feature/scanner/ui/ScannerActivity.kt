@@ -108,7 +108,7 @@ class ScannerActivity : AppCompatActivity() {
             autoFocusMode = AutoFocusMode.SAFE
             scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
-            isFlashEnabled = true
+            isFlashEnabled = false
 
             decodeCallback = DecodeCallback { scan ->
                 runOnUiThread { viewModel.processScan(scan.text) }
@@ -156,6 +156,7 @@ class ScannerActivity : AppCompatActivity() {
 
     private fun renderScanResultTextWithHint() {
         renderScanResultText(getString(R.string.scanner_hint))
+        binding.scanResultText.textSize = 24F
     }
 
     private fun renderScanResultButtons(isVisible: Boolean) {
@@ -182,6 +183,7 @@ class ScannerActivity : AppCompatActivity() {
 
     private fun renderScanResultText(string: String) {
         binding.scanResultText.text = string
+        binding.scanResultText.textSize = 16F
     }
 
     private fun initClickListeners(string: String) {
